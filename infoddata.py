@@ -24,17 +24,25 @@ prev_root = ''
 dirs_name = []
 dir_count = []
 
-# 
+# Para recorrer el directorio usamos la funcion os.walk en un for
+# Donde root representa la direccion raiz donde se encuentra actualemente
+# dirs es el nombre de los directorios recorridos
+# files se refiere al recorrido que se hara por cada uno de los directorios
 print("LEYENDO IMAGENES....")
 sleep(1)
 for root, dirs, files in os.walk(path_skindeseases):
     for filename in files:
+        # La funcion re.search busca si hay algun archivo de tipo jpg|png o jpeg, de ser el caso
+        # Se aumenta el valor de la variable count
         if re.search("\.(jpg|png|jpeg)$", filename):
             count += 1
+            # Prev_root sirve como un metodo de control para cuando la direccion del directorio 
+            # Haya cambiado, esto significa que debemos volver a realizar la cuenta para la siguiente direccion
             if prev_root != root:
                 prev_root = root
                 dir_count.append(count)
                 count = 0
+    # En la siguiente loop se guardan los nombres de los directorios a un nuevo arreglo
     for name_dirs in dirs:
         dirs_name.append(name_dirs)
     
@@ -43,7 +51,8 @@ dir_count.append(count)
 dir_count = dir_count[1:]
 dir_count[0] = dir_count[0] + 1
 
-# Formato para imprimir la informacion en el formato adecuado
+# Formato para imprimir la informacion 
+# Aqui estamos usando el arreglo de nombres y el arregle con el numero de imagenes por categoria
 print("CATAGORIAS ENCONTRADOS", len(dirs_name))
 print("=========================================================================================")
 print('{:<70}{}'.format("NOMBRE DEL CATEGORIAS","NUMERO DE IMAGENES"))
