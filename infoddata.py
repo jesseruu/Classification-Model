@@ -12,10 +12,10 @@ import re
 from time import sleep
 
 # Determinamos la direccion de las imagenes para brindar informacion de las categorias
-# os.getcwd determina
+# os.getcwd obtiene la direccion actual del directorio actual
 path_skindeseases = os.path.join(os.getcwd(),'Dataset/skin_diseases') + os.sep
 
-# Defimos un valor de cuenta, para que incremente cuando encuentre un directorio o una imagen
+# Definimos un valor de cuenta, para que se incremente cuando encuentre un directorio o una imagen
 # Definimos un prev_root, como metodo de control al pasar de direccion de directorio
 # dirs_name es un arreglo que guarda los nombres de los directorios
 # dir_count es un arreglo que guarda la cuenta de las imagenes encontradas en un directorio
@@ -27,7 +27,7 @@ dir_count = []
 # Para recorrer el directorio usamos la funcion os.walk en un for
 # Donde root representa la direccion raiz donde se encuentra actualemente
 # dirs es el nombre de los directorios recorridos
-# files se refiere al recorrido que se hara por cada uno de los directorios
+# files al archivo que apunta en ese momento se a donde esta apunto 
 print("LEYENDO IMAGENES....")
 sleep(1)
 for root, dirs, files in os.walk(path_skindeseases):
