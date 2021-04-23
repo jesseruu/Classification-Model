@@ -13,7 +13,7 @@ from time import sleep
 
 # Determinamos la direccion de las imagenes para brindar informacion de las categorias
 # os.getcwd obtiene la direccion actual del directorio actual
-path_skindeseases = os.path.join(os.getcwd(),'Dataset/skin_diseases') + os.sep
+path_skindeseases = os.path.join(os.getcwd(),'Dataset/skin_diseases/')
 
 # Definimos un valor de cuenta, para que se incremente cuando encuentre un directorio o una imagen
 # Definimos un prev_root, como metodo de control al pasar de direccion de directorio
