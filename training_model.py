@@ -65,7 +65,7 @@ class clasificacion_enfermedades():
         if option == 'S' or option == 's':
             self.imprimir_imagenes(dir_count, dirs_name)
 
-        self.modelo_clasificacion(path_skindeseases)
+        self.modelo_clasificacion(path_skindeseases, dirs_name)
 
 
     def imprimir_imagenes(self, count, name):
@@ -82,7 +82,7 @@ class clasificacion_enfermedades():
         print("=========================================================================================")
         print('{:<70}{}'.format("TOTAL DE IMAGENES ENCONTRADAS", sum(count)),"\n")
 
-    def modelo_clasificacion(self, path):
+    def modelo_clasificacion(self, path, name_class):
 
         # Cargar imagenes
         imagenes_train = tf.keras.preprocessing.image_dataset_from_directory(
@@ -100,9 +100,6 @@ class clasificacion_enfermedades():
             subset="validation",
             image_size=(256, 256),
         )
-
-        # Nombre de las categorias
-        class_name = imagenes_train.class_names
 
         # Cache las imagenes en memoria
         AUTOTUNE = tf.data.AUTOTUNE
@@ -163,10 +160,10 @@ class clasificacion_enfermedades():
         score = tf.nn.softmax(prediccion[0])
 
         # Realizamos la impresion de los resultados que predijo el modelo y su precision
-        print("\nLa enfermedad es: {} con un {:.2f} porciento de confianza"
-            .format(class_name[np.argmax(score)], 100 * np.max(score)))
-
+        print("\nLa enfermedad es: {} con un {:.2f} porcentaje de confianza"
+            .format(name_class[np.argmax(score)], 100 * np.max(score)))
+            
 if __name__ == '__main__':
-    X = clasificacion_enfermedades()
-    X.inicialize_images()
+    carga = clasificacion_enfermedades()
+    carga.inicialize_images()
 
