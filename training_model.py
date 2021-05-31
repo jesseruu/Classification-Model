@@ -143,6 +143,7 @@ class clasificacion_enfermedades():
         else:
             print("Modelo ya encontrado")
         
+        # Precision del modelo general
         skin_model = tf.keras.models.load_model('Modelo/skin_diseases.h5')
         perdida, precision = skin_model.evaluate(imagenes_train, verbose=2)
         print("\nLa precision del modelo es: {:5.2f}".format(100 * precision))
@@ -162,7 +163,7 @@ class clasificacion_enfermedades():
         score = tf.nn.softmax(prediccion[0])
 
         # Realizamos la impresion de los resultados que predijo el modelo y su precision
-        print("\nLa enfermedad es: {} con un {:.2f} porcentaje de confianza"
+        print("\nLa enfermedad es: {} con un {:.2f} porciento de confianza"
             .format(class_name[np.argmax(score)], 100 * np.max(score)))
 
 if __name__ == '__main__':
