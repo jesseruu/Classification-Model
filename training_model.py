@@ -6,6 +6,7 @@ Autor: Jesser Lemus
 '''
 # Importamos los modulos y librerias necesarias
 import tensorflow as tf
+from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 
@@ -100,10 +101,10 @@ class clasificacion_enfermedades():
             image_size=(256, 256),
         )
 
+        # Nombre de las categorias
         class_name = imagenes_train.class_names
-        print(class_name)
 
-
+        # Cache las imagenes en memoria
         AUTOTUNE = tf.data.AUTOTUNE
 
         imagenes_train = imagenes_train.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
@@ -111,6 +112,7 @@ class clasificacion_enfermedades():
 
         num_class = 15
 
+        # Definimos el modelo CNN de tres capas con una activacion relu
         model = Sequential([
                 layers.experimental.preprocessing.Rescaling(1./255),
                 layers.Conv2D(32, 3, padding='same', activation='relu'),
@@ -126,19 +128,44 @@ class clasificacion_enfermedades():
                 ])
 
         model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
-        
-        model.fit(
-            imagenes_train,
-            validation_data=imagenes_val,
-            epochs = 10
-        )
-        
-        if os.path.exists('Modelo'):
-            model.save('Modelo/skin_diseases.h5py')
-        else:
-            os.mkdir('Modelo')
-            model.save('Modelo/skin_diseases.h5py')
 
-X = clasificacion_enfermedades()
-X.inicialize_images()
+        # Sistema de control de la existencia de un modelo entrenado
+        if not os.path.exists('Modelo'):
+            
+            model.fit(
+                imagenes_train,
+                validation_data=imagenes_val,
+                epochs = 10
+                )
+
+            os.mkdir('Modelo')
+            model.save('Modelo/skin_diseases.h5')
+        else:
+            print("Modelo ya encontrado")
+        
+        skin_model = tf.keras.models.load_model('Modelo/skin_diseases.h5')
+        perdida, precision = skin_model.evaluate(imagenes_train, verbose=2)
+        print("\nLa precision del modelo es: {:5.2f}".format(100 * precision))
+
+        # Ahora con el modelo entrenado se puede predecir imagenes que no esten en el dataset original
+        # Cargamos la una nueva imagen
+        img_pruebas_path = os.path.join(os.getcwd(), 'Prueba_img/melanoma_test.jpg')
+        img_prueba = keras.preprocessing.image.load_img(
+            img_pruebas_path, target_size=(256, 256)
+        )
+
+        img_prueba_array = keras.preprocessing.image.img_to_array(img_prueba)
+        img_prueba_array = tf.expand_dims(img_prueba_array, 0)
+
+        # Realizamos la prediccion con la imagen
+        prediccion = skin_model.predict(img_prueba_array)
+        score = tf.nn.softmax(prediccion[0])
+
+        # Realizamos la impresion de los resultados que predijo el modelo y su precision
+        print("\nLa enfermedad es: {} con un {:.2f} porcentaje de confianza"
+            .format(class_name[np.argmax(score)], 100 * np.max(score)))
+
+if __name__ == '__main__':
+    X = clasificacion_enfermedades()
+    X.inicialize_images()
 
