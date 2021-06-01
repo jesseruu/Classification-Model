@@ -140,7 +140,7 @@ class clasificacion_enfermedades():
             model.save('Modelo/skin_diseases.h5')
             print("Evaluando el modelo...")
             perdida, precision = model.evaluate(imagenes_train, verbose=2)
-            print("La precision del modelo es: {:5.2f}".format(100 * precision))
+            print("La precision del modelo es: {:5.2f}%".format(100 * precision))
 
         else:
 
